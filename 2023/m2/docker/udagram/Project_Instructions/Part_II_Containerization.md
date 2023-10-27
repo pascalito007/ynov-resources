@@ -41,27 +41,7 @@ It's not a hard requirement to use the exact same Dockerfile above. Feel free to
 
 ### Dockerfile for the Frontend Application
 
-In the frontend service, you just need to add a Dockerfile to the _/udagram-frontend/_ directory.
-
-```bash
-## Build
-FROM beevelop/ionic:latest AS ionic
-# Create app directory
-WORKDIR /usr/src/app
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
-RUN npm ci
-# Bundle app source
-COPY . .
-RUN ionic build
-## Run
-FROM nginx:alpine
-#COPY www /usr/share/nginx/html
-COPY --from=ionic  /usr/src/app/www /usr/share/nginx/html
-```
-
-> **Tip**: Add `.dockerignore` to each of the services above, and mention `node_modules` in that file. It will ensure that the `node_modules` will not be included in the Dockerfile `COPY` commands.
+Please make use of `pasciano007/udagram-frontend`
 
 ### How would containers discover each other and communicate?
 
@@ -155,78 +135,15 @@ docker-compose -f docker-compose-build.yaml build --parallel
 
 > **Note**: YAML files are extremely indentation sensitive, make sure you did not altered the content.
 
-3. **Run containers** using the images created in the step above. Create another YAML file, [docker-compose.yaml], in the project's parent directory with below content.
+3. **Run containers** using the images created in the step above. Create another YAML file, [compose.yaml], in the project's parent directory with below requirements.
 
-```bash
-version: "3"
-services:
-  udagramd-db:
-    image: postgres
-    networks:
-      - udagram
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: "admin1234"
-      POSTGRES_USER: "admin"
-      POSTGRES_DB: "udagramdb"
-  reverseproxy:
-    image: reverseproxy
-    networks:
-      - udagram
-    ports:
-      - 8080:8080
-    restart: always
-    depends_on:
-      - udagramd-db
-      - backend-user
-      - backend-feed
-  backend-user:
-    depends_on:
-      - udagramd-db
-    image: udagram-api-user
-    networks:
-      - udagram
-    environment:
-      POSTGRES_USERNAME: $POSTGRES_USERNAME
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
-      POSTGRES_HOST: $POSTGRES_HOST
-      AWS_REGION: $AWS_REGION
-      AWS_PROFILE: $AWS_PROFILE
-      AWS_BUCKET: $AWS_BUCKET
-      JWT_SECRET: $JWT_SECRET
-      URL: "http://localhost:8100"
-  backend-feed:
-    depends_on:
-      - udagramd-db
-    image: udagram-api-feed
-    networks:
-      - udagram
-    volumes:
-      - $HOME/.aws:/root/.aws
-    environment:
-      POSTGRES_USERNAME: $POSTGRES_USERNAME
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
-      POSTGRES_HOST: $POSTGRES_HOST
-      AWS_REGION: $AWS_REGION
-      AWS_PROFILE: $AWS_PROFILE
-      AWS_BUCKET: $AWS_BUCKET
-      JWT_SECRET: $JWT_SECRET
-      URL: "http://localhost:8100"
-  frontend:
-    image: udagram-frontend:local
-    networks:
-      - udagram
-    ports:
-      - "8100:80"
-networks:
-  udagram:
-    name: udagram
-```
-
-It will use the existing images and create containers. While creating containers, it defines the port mapping, and the container dependency.
+- make use of your own private registry images
+- the containers need to be inside a network called `udagram`
+- the database (postgres) container expect the environnement variables POSTGRES_PASSWORD, POSTGRES_USER, POSTGRES_DB
+- The reverseproxy container export `8080` inside the container and need to expose `8080` outside
+- The reverse proxy `depends_on` the containers `udagramd-db` , `backend-user` and `backend-feed`
+- The backend-user and the backend-feed expect below environnement variables
+  - POSTGRES_USERNAME, POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_HOST,AWS_REGION,AWS_PROFILE,AWS_BUCKET,JWT_SECRET and URL: `"http://localhost:8100"` and they `depends_on` the database.
 
 Once you have the YAML file above ready in your project directory, you can start the application using:
 
@@ -234,4 +151,5 @@ Once you have the YAML file above ready in your project directory, you can start
 docker-compose up -d
 ```
 
-4. Visit http://localhost:8100 in your web browser to verify that the application is running.
+4. Do the port forwarding for the frontend app
+5. Visit http://localhost:8100 in your web browser to verify that the application is running.

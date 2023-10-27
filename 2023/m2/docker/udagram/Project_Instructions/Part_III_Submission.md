@@ -4,9 +4,9 @@ The pdf submitted MUST contains the link to a public GitHub repo and should incl
 
 ### Required Screenshots
 
-Please submit a pdf with members of the team names in it and a public github repo containing all required files. Submit it in moodle UDAGRAM-TP
+Please submit a pdf with members of the team names in it and a public github repo containing all required files. Submit it in moodle UDAGRAM-TP. Please dont forget to add summaries of all your steps to achieve the project.
 
-- Docker images in your repository in DockerHub
+- Docker images in your repository in your own private registry
 - Result of the command that list all running containers
 - Result of the command that list the images
 - Result of the network you created for the project
