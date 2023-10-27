@@ -33,7 +33,7 @@ Afterwards, you can prevent the file from being included in your solution by add
 
 ### 1. Database
 
-Create a PostgreSQL database locally using docker postgres image from dockerhub. The database is used to store the application's metadata.
+Create a PostgreSQL database locally using docker postgres image from your own private registry. The database is used to store the application's metadata.
 
 - You will need to use password authentication for this project. This means that a username and password is needed to authenticate and access the database.
 - The port number will need to be set as `5432`. This is the typical port that is used by PostgreSQL so it is usually set to this port by default.

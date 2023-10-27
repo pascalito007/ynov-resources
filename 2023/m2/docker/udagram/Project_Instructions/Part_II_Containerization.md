@@ -39,9 +39,9 @@ CMD [ "npm", "run", "dev" ]
 
 It's not a hard requirement to use the exact same Dockerfile above. Feel free to use other base images or optimize the commands.
 
-### Dockerfile for the Frontend Application
+### Frontend Application
 
-Please make use of `pasciano007/udagram-frontend`
+Please make use of `pasciano007/udagram-frontend`. Pull it and put it in your private registry
 
 ### How would containers discover each other and communicate?
 
@@ -117,10 +117,6 @@ services:
     build:
       context: ./udagram-api-feed
     image: udagram-api-feed
-  frontend:
-    build:
-      context: ./udagram-frontend
-    image: udagram-frontend:local
 ```
 
 It will create an image for each individual service. Then, you can run the following command to create images locally:
