@@ -198,6 +198,35 @@ CMD ["node", "server.js"]
 
 3. Create another file called `compose.yml` and it will be responsible of deploying the application and all the needed containers. Please make sure that the images are referencing the one in your private registry.
 
+### For postgres `db`
+
+- It need to be inside `back-tier` network
+- Please make use of below in your compose file. Please use `postgres:15-alpine` for the postgres image
+
+```shell
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+      - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/postgres.sh
+      interval: "5s"
+```
+
+- for the volume `db-data` make sure you create it in your compose file
+
+### For `redis` service
+
+Please make use of below in your compose file.
+
+```shell
+      - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/redis.sh
+      interval: "5s"
+```
+
+- It need to be inside `back-tier` network
+
 ## Architecture
 
 ![Architecture diagram](architecture.png)
