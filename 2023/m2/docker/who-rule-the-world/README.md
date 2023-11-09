@@ -13,7 +13,20 @@ This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres 
 ## Tasks
 
 1. Create a file called docker-compose.build.yml (not running containers). This file will be responsable for building the application images from the Dockerfile contents provided.
-   - Below is the one for `worker` service
+
+### For `worker` service
+
+- The worker `depends_on` `redis` and `db`. Make use of below in your compose file
+
+```shell
+ depends_on:
+   redis:
+     condition: service_healthy
+   db:
+     condition: service_healthy
+```
+
+- The worker need to be inside `back-tier` network
 
 ```bash
 FROM --platform=${BUILDPLATFORM} mcr.microsoft.com/dotnet/sdk:7.0 as build
@@ -36,7 +49,30 @@ COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Worker.dll"]
 ```
 
-- Below is the one for `vote` service
+### For `vote` service
+
+- map a volume at `/usr/local/app` that that is inside the container. This need to be a bind mount for example
+
+```shell
+volumes:
+     - ./vote:/usr/local/app
+```
+
+- The `vote` service listen on port `80`. Feel free to expose for example `5002` outside.
+
+- The `vote` service need to be inside two networks `front-tier` and `back-tier`
+  ad below option for `vote`
+
+```shell
+healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+```
+
+- Below is the Dockerfile of `vote` service
 
 ```shell
 # Define a base stage that uses the official python runtime base image
@@ -76,7 +112,21 @@ CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-log
 
 The `vote` app will be running at [http://localhost:5000](http://localhost:5000), and the `results` will be at [http://localhost:5001](http://localhost:5001).
 
-- Below the one for `seed-data`
+### For `seed-data`
+
+- Note: add for `seed`
+
+```shell
+profiles: ["seed"]
+    depends_on:
+      vote:
+        condition: service_healthy
+    restart: "no"
+```
+
+- It need to be inside `front-tier` network
+
+- Below the Dockerfile
 
 ```shell
 FROM python:3.9-slim
@@ -97,7 +147,24 @@ RUN python make-data.py
 CMD /seed/generate-votes.sh
 ```
 
-- Below is the one for `result`
+### For `result`
+
+- Inside the container the port is `80`
+  I strongly recommands you use below:
+
+```shell
+entrypoint: nodemon --inspect=0.0.0.0 server.js
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./result:/usr/local/app
+    ports:
+      - "5001:80"
+      - "127.0.0.1:9229:9229"
+```
+
+- Below the Dockerfile for result
 
 ```shell
 FROM node:18-slim
