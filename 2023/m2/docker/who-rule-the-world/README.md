@@ -110,7 +110,7 @@ EXPOSE 80
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]
 ```
 
-The `vote` app will be running at [http://localhost:5000](http://localhost:5000), and the `results` will be at [http://localhost:5001](http://localhost:5001).
+The `vote` app will be running at [http://localhost:5002](http://localhost:5002), and the `results` will be at [http://localhost:5001](http://localhost:5001).
 
 ### For `seed-data`
 
@@ -149,7 +149,7 @@ CMD /seed/generate-votes.sh
 
 ### For `result`
 
-- Inside the container the port is `80`
+- Inside the container the port is `80`. Feel free to expose outside with for example `5001`
   I strongly recommands you use below:
 
 ```shell
