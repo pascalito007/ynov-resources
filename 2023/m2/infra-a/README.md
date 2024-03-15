@@ -6,13 +6,15 @@ The company has a file storage solution in his on-premises infrastructure.
 
 The files in the company on-premise storage comes from different sources (Third party providers or external Partners).
 
-## Decoder
+## Programs
+
+### Decoder
 
 The trading application has a small piece of code (written in Java) that **decode** each new file as soon as it is added in the storage. A cron Job have been created to execute that function every 5min in order to check for new files. (This is something that the company want to improve when moving to Cloud because they want the piece of code to be executed immediatly as soon as new files arrive).
 
 Once the decode finished, the output data (final result) is stored in a Postgres relational database.
 
-## Exposer
+### Exposer
 
 The company have a REST API (written also in Java) that retrieve and verify the data from the postgres database. The API is exposed to the end users or some python clients.
 
