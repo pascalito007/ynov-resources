@@ -54,4 +54,4 @@ For Client VPN authentication, you will need a directory service deployment http
   4. https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/what-is.html
   5. https://aws.amazon.com/vpn/client-vpn/?nc1=h_ls
 
-# Thanks, and be creative
+# Thanks, and be creative ![Enjoy](image.png)
