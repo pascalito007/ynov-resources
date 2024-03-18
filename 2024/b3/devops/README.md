@@ -5,8 +5,9 @@ The `counter-app` is a sample counter app.
 # Tasks
 
 1. Containerize the application. The image that you will build must be named <ynov-Your-Team-First-Names>
-2. Publish the custom image to your own dockerhub account
-3. Create 3 virtual machines with ubuntu server.
+1. complete the Dockerfile with the TODO
+1. Publish the custom image to your own dockerhub account
+1. Create 3 virtual machines with ubuntu server.
 
    - The first virtual machine will be named `gitlab-instance`
    - The second virtual machine will be named `gitlab-runner`
