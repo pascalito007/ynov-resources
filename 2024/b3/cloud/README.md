@@ -18,7 +18,7 @@ You are tasked to deployed the website in AWS Cloud by following below instructi
 
 ## submission
 
-- Make sure you submit your PDF in moodle `CAPSTONE-PROJECT`
+- Make sure you submit your public github url that contains all your work in moodle `CAPSTONE-PROJECT`
 - Make sure your PDF is well written and well described with table of contents and sections and so on.
 
   ### References:
