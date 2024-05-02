@@ -38,7 +38,7 @@ The team want to migrate this trading application into AWS to take benefit of cl
 - For the program that decode the files, feel free to consider a sample code to illustrate that. The code can be written in any programming language.
 - Same for the program that expo the result to users (exposer REST API)
 - Make sure your solution makes use of least privilege for resources access using IAM.
-- You will have **30 minutes** maximum to present your work.
+- You will have **15 minutes** maximum to present your work.
 - Make sure you submit your PDF and your PowerPoint to Moodle
 
 - **BONUS:** deploy the infrastructure using Terraform
